@@ -7,19 +7,20 @@ from natsort import natsorted
 notvalid = True
 while notvalid:	# request a url until a valid one is typed
     url = input('>> Enter the url of the site with the images: ')
-    for i in url:
-        if 'https' in url or 'http' in url:
+    try:
+        page = requests.get(url)
+        if page != None:
             notvalid = False
-            break
-    if notvalid:
-        print("Url inserted is not valid! Please insert a correct one")
+    except:
+        notvalid
+        print('⚠️ Url inserted is not valid! Please insert a correct one')
 
 file_path = input('>> Enter the file path: ')
 if os.path.isdir(file_path):
     pass
 else:
     os.mkdir(file_path)
-    print('>>>',file_path,'does not exsist, created and using it')
+    print('>>>'+file_path+'does not exsist, created and using it')
 
 common_char = input('>> Enter the common characteristic of the url: ') # a character common in every url of the images you want
 choosename = input('>> How do you want to name the images: ')
@@ -34,7 +35,7 @@ soup = BeautifulSoup(page.content, 'html.parser')
 images = soup.find_all('img')
 
 print('=== Images Found ===')
-#trovo le immagini giuste e le scarico nella giusta cartella
+#tfind the images and downlod them in the right folder
 a = 1
 for img in images:
     if img.has_attr('src'):
